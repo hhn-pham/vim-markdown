@@ -33,7 +33,7 @@ syn case ignore
 " {{{ INLINE ELEMENTS
 
 syn cluster markdownInline contains=
-  \ markdownItalic,markdownBold,markdownBoldItalic,markdownStrike,markdownInlineCode,
+  \ markdownItalic,markdownBold,markdownBoldItalic,markdownInlineCode,
   \ markdownPullRequestLinkInText,markdownUrlLinkInText,markdownUserLinkInText,
   \ markdownEmailLinkInText,markdownLinkContainer,markdownXmlComment,
   \ markdownXmlElement,markdownXmlEmptyElement,markdownXmlEntities
@@ -73,8 +73,7 @@ execute 'syn region markdownBoldItalic matchgroup=markdownInlineDelimiter '
   \ . 'contains=@markdownInline '
   \ . b:markdown_concealends
 
-syn match markdownStrike /\%(\\\)\@<!\~\~\%(\S\)\@=\_.\{-}\%(\S\)\@<=\~\~/ contains=markdownStrikeDelimiter,@markdownInline
-syn match markdownStrikeDelimiter /\~\~/ contained
+execute 'syn region markdownStrike matchgroup=markdownStrikeDelimiter start="\%(\~\~\)" end="\%(\~\~\)"' . ' concealends'
 
 " Fenced code blocks in list items must be preceded by an empty line This is
 " made this way so that the second rule could eat up something that is not a
@@ -516,6 +515,10 @@ endfor
 hi def link markdownItemDelimiter Special
 hi def link markdownFencedCodeBlockInItemDelimiter Special
 
+syntax match markdownCheckbox "\*\ \[\ \]" conceal cchar=
+syntax match markdownCheckbox "\*\ \[\]" conceal cchar=
+syntax match markdownCheckbox "\* \[x\]" conceal cchar=
+
 " }}}
 
 
@@ -896,6 +899,7 @@ hi def link markdownLinkUrlContainer        Delimiter
 hi def link markdownLinkTextContainer       Delimiter
 hi def link markdownLinkReference           NonText
 
+hi def link markdownCheckbox                Delimiter
 hi def link markdownCodeDelimiter           Delimiter
 hi def link markdownInlineCode              String
 hi def link markdownFencedCodeBlock         String
@@ -904,7 +908,7 @@ hi def link markdownCodeBlock               String
 hi def link markdownTableDelimiter          Delimiter
 hi def link markdownTableHeader             Bold
 
-hi def link markdownStrike                  NonText
+hi def link markdownStrike                  Folded
 hi def link markdownStrikeDelimiter         Delimiter
 hi def link markdownBlockquote              Comment
 hi def link markdownBlockquoteDelimiter     Delimiter
